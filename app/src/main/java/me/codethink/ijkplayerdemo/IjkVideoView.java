@@ -189,27 +189,6 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         mRenderView.setVideoRotation(mVideoRotationDegree);
     }
 
-    public void toggleFullscreen() {
-//        mRenderView.setVideoRotation(90);
-
-        int w = getWidth();
-        int h = getHeight();
-
-        setRotation(90.0f);
-        setTranslationX((w - h) / 2);
-        setTranslationY((h - w) / 2);
-
-        ViewGroup.LayoutParams lp = (ViewGroup.LayoutParams) getLayoutParams();
-        lp.height = w;
-        lp.width = h;
-        requestLayout();
-//        setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-//        setRotation(90);
-//        toggleAspectRatio();
-//        mRenderView.setVideoSize(width, height);
-//        setRotation(90);
-    }
-
     public void setRender(int render) {
         switch (render) {
             case RENDER_NONE:
@@ -860,28 +839,15 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         return 0;
     }
 
-    // REMOVED: getAudioSessionId();
-    // REMOVED: onAttachedToWindow();
-    // REMOVED: onDetachedFromWindow();
-    // REMOVED: onLayout();
-    // REMOVED: draw();
-    // REMOVED: measureAndLayoutSubtitleWidget();
-    // REMOVED: setSubtitleWidget();
-    // REMOVED: getSubtitleLooper();
-
-    //-------------------------
-    // Extend: Aspect Ratio
-    //-------------------------
-
     private static final int[] s_allAspectRatio = {
             IRenderView.AR_ASPECT_FIT_PARENT,
             IRenderView.AR_ASPECT_FILL_PARENT,
             IRenderView.AR_ASPECT_WRAP_CONTENT,
-            // IRenderView.AR_MATCH_PARENT,
+             IRenderView.AR_MATCH_PARENT,
             IRenderView.AR_16_9_FIT_PARENT,
             IRenderView.AR_4_3_FIT_PARENT};
-    private int mCurrentAspectRatioIndex = 0;
-    private int mCurrentAspectRatio = s_allAspectRatio[0];
+    private int mCurrentAspectRatioIndex = 3;
+    private int mCurrentAspectRatio = s_allAspectRatio[3];
 
     public int toggleAspectRatio() {
         mCurrentAspectRatioIndex++;
@@ -929,27 +895,6 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         return mCurrentRender;
     }
 
-    @NonNull
-    public static String getRenderText(Context context, int render) {
-        String text;
-//        switch (render) {
-//            case RENDER_NONE:
-////                text = context.getString(R.string.VideoView_render_none);
-//                break;
-//            case RENDER_SURFACE_VIEW:
-////                text = context.getString(R.string.VideoView_render_surface_view);
-//                break;
-//            case RENDER_TEXTURE_VIEW:
-////                text = context.getString(R.string.VideoView_render_texture_view);
-//                break;
-//            default:
-//
-//                break;
-//        }
-        text = context.getString(R.string.N_A);
-        return text;
-    }
-
     //-------------------------
     // Extend: Player
     //-------------------------
@@ -961,26 +906,6 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
             mRenderView.getView().invalidate();
         openVideo();
         return mSettings.getPlayer();
-    }
-
-    @NonNull
-    public static String getPlayerText(Context context, int player) {
-        String text;
-        text = context.getString(R.string.N_A);
-//        switch (player) {
-//            case Settings.PV_PLAYER__AndroidMediaPlayer:
-//                text = context.getString(R.string.VideoViw_player_AndroidMediaPlayere);
-//                break;
-//            case Settings.PV_PLAYER__IjkMediaPlayer:
-//                text = context.getString(R.string.VideoView_player_IjkMediaPlayer);
-//                break;
-//            case Settings.PV_PLAYER__IjkExoMediaPlayer:
-//                text = context.getString(R.string.VideoView_player_IjkExoMediaPlayer);
-//                break;
-//            default:
-//                break;
-//        }
-        return text;
     }
 
     public IMediaPlayer createPlayer(int playerType) {
@@ -1057,8 +982,6 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         if (mEnableBackgroundPlay) {
             MediaPlayerService.intentToStart(getContext());
             mMediaPlayer = MediaPlayerService.getMediaPlayer();
-//            if (mHudViewHolder != null)
-//                mHudViewHolder.setMediaPlayer(mMediaPlayer);
         }
     }
 
@@ -1072,72 +995,6 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
 
     public void stopBackgroundPlay() {
         MediaPlayerService.setMediaPlayer(null);
-    }
-
-    //-------------------------
-    // Extend: Background
-    //-------------------------
-    public void showMediaInfo() {
-//        if (mMediaPlayer == null)
-//            return;
-//
-//        int selectedVideoTrack = MediaPlayerCompat.getSelectedTrack(mMediaPlayer, ITrackInfo.MEDIA_TRACK_TYPE_VIDEO);
-//        int selectedAudioTrack = MediaPlayerCompat.getSelectedTrack(mMediaPlayer, ITrackInfo.MEDIA_TRACK_TYPE_AUDIO);
-//
-////        TableLayoutBinder builder = new TableLayoutBinder(getContext());
-////        builder.appendSection(R.string.mi_player);
-////        builder.appendRow2(R.string.mi_player, MediaPlayerCompat.getName(mMediaPlayer));
-////        builder.appendSection(R.string.mi_media);
-////        builder.appendRow2(R.string.mi_resolution, buildResolution(mVideoWidth, mVideoHeight, mVideoSarNum, mVideoSarDen));
-////        builder.appendRow2(R.string.mi_length, buildTimeMilli(mMediaPlayer.getDuration()));
-//
-//        ITrackInfo trackInfos[] = mMediaPlayer.getTrackInfo();
-//        if (trackInfos != null) {
-//            int index = -1;
-//            for (ITrackInfo trackInfo : trackInfos) {
-//                index++;
-//
-//                int trackType = trackInfo.getTrackType();
-//                if (index == selectedVideoTrack) {
-//                    builder.appendSection(getContext().getString(R.string.mi_stream_fmt1, index) + " " + getContext().getString(R.string.mi__selected_video_track));
-//                } else if (index == selectedAudioTrack) {
-//                    builder.appendSection(getContext().getString(R.string.mi_stream_fmt1, index) + " " + getContext().getString(R.string.mi__selected_audio_track));
-//                } else {
-//                    builder.appendSection(getContext().getString(R.string.mi_stream_fmt1, index));
-//                }
-//                builder.appendRow2(R.string.mi_type, buildTrackType(trackType));
-//                builder.appendRow2(R.string.mi_language, buildLanguage(trackInfo.getLanguage()));
-//
-//                IMediaFormat mediaFormat = trackInfo.getFormat();
-//                if (mediaFormat == null) {
-//                } else if (mediaFormat instanceof IjkMediaFormat) {
-//                    switch (trackType) {
-//                        case ITrackInfo.MEDIA_TRACK_TYPE_VIDEO:
-//                            builder.appendRow2(R.string.mi_codec, mediaFormat.getString(IjkMediaFormat.KEY_IJK_CODEC_LONG_NAME_UI));
-//                            builder.appendRow2(R.string.mi_profile_level, mediaFormat.getString(IjkMediaFormat.KEY_IJK_CODEC_PROFILE_LEVEL_UI));
-//                            builder.appendRow2(R.string.mi_pixel_format, mediaFormat.getString(IjkMediaFormat.KEY_IJK_CODEC_PIXEL_FORMAT_UI));
-//                            builder.appendRow2(R.string.mi_resolution, mediaFormat.getString(IjkMediaFormat.KEY_IJK_RESOLUTION_UI));
-//                            builder.appendRow2(R.string.mi_frame_rate, mediaFormat.getString(IjkMediaFormat.KEY_IJK_FRAME_RATE_UI));
-//                            builder.appendRow2(R.string.mi_bit_rate, mediaFormat.getString(IjkMediaFormat.KEY_IJK_BIT_RATE_UI));
-//                            break;
-//                        case ITrackInfo.MEDIA_TRACK_TYPE_AUDIO:
-//                            builder.appendRow2(R.string.mi_codec, mediaFormat.getString(IjkMediaFormat.KEY_IJK_CODEC_LONG_NAME_UI));
-//                            builder.appendRow2(R.string.mi_profile_level, mediaFormat.getString(IjkMediaFormat.KEY_IJK_CODEC_PROFILE_LEVEL_UI));
-//                            builder.appendRow2(R.string.mi_sample_rate, mediaFormat.getString(IjkMediaFormat.KEY_IJK_SAMPLE_RATE_UI));
-//                            builder.appendRow2(R.string.mi_channels, mediaFormat.getString(IjkMediaFormat.KEY_IJK_CHANNEL_UI));
-//                            builder.appendRow2(R.string.mi_bit_rate, mediaFormat.getString(IjkMediaFormat.KEY_IJK_BIT_RATE_UI));
-//                            break;
-//                        default:
-//                            break;
-//                    }
-//                }
-//            }
-//        }
-//
-//        AlertDialog.Builder adBuilder = builder.buildAlertDialogBuilder();
-//        adBuilder.setTitle(R.string.media_information);
-//        adBuilder.setNegativeButton(R.string.close, null);
-//        adBuilder.show();
     }
 
     private String buildResolution(int width, int height, int sarNum, int sarDen) {

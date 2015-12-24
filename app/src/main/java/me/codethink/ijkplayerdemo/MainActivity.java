@@ -1,5 +1,6 @@
 package me.codethink.ijkplayerdemo;
 
+import android.app.ActionBar;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +29,13 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.video_controller__screen_size).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                View decorView = getWindow().getDecorView();
+                int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+                decorView.setSystemUiVisibility(uiOptions);
+
+                decorView.requestLayout();
+
+                findViewById(android.R.id.content).requestLayout();
                 findViewById(R.id.tv).setVisibility(View.GONE);
                 ViewGroup.LayoutParams layoutParams = ((FrameLayout)findViewById(R.id.con2)).getLayoutParams();
 
@@ -35,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
                 findViewById(R.id.con2).requestLayout();
 
 
-                int w = container.getWidth();
-                int h = container.getHeight();
+                int w = findViewById(android.R.id.content).getWidth();
+                int h = findViewById(android.R.id.content).getHeight();
 
                 container.setRotation(90);
                 container.setTranslationX((w - h) / 2);
@@ -47,12 +55,14 @@ public class MainActivity extends AppCompatActivity {
                 lp.width = h;
                 container.requestLayout();
 
+
             }
         });
 
         findViewById(R.id.player_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                getWindow().getDecorView().setSystemUiVisibility(View.VISIBLE);
                 findViewById(R.id.tv).setVisibility(View.VISIBLE);
                 ViewGroup.LayoutParams layoutParams = ((FrameLayout)findViewById(R.id.con2)).getLayoutParams();
                 layoutParams.height = 609;
